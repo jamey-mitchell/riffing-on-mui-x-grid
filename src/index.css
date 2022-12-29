@@ -15,3 +15,7 @@ code {
 .base-layout-grid {
   height: 100vh;
 }
+
+.multi-faceted-grid {
+  width: 100%;
+}
