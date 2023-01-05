@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { Grid } from '@mui/material';
 
 const rows: GridRowsProp = [
     { id: 1, col1: 'Hello', col2: 'World' },
@@ -14,6 +15,9 @@ const rows: GridRowsProp = [
   
 export default function TabbedGrid() {
     return (
-      <DataGrid rows={rows} columns={columns} sx={{ height: 1, width: 1}} />
+      <Grid>
+        what what
+        <DataGrid rows={rows} columns={columns} sx={{ height: 1, width: 1}} />
+      </Grid>
     );
   }
