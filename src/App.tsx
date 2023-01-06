@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { FormControl, FormControlLabel, Grid, Radio, RadioGroup } from '@mui/material';
 import type {} from '@mui/x-data-grid/themeAugmentation';
+import MultiFacetedGrid from './components/multi-faceted-grid';
 import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowsProp } from '@mui/x-data-grid';
 
 const theme = createTheme({
