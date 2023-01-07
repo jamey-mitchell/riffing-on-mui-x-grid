@@ -1,10 +1,10 @@
 import React from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { FormControl, FormControlLabel, Grid, Radio, RadioGroup } from '@mui/material';
+import { FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material';
 import type {} from '@mui/x-data-grid/themeAugmentation';
-import MultiFacetedGrid from './components/multi-faceted-grid';
-import { DataGrid, GridColDef, GridColumnVisibilityModel, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, GridCheckIcon, GridColDef, GridColumnHeaderParams, GridColumnVisibilityModel, GridRenderCellParams, GridRenderEditCellParams, GridRowsProp } from '@mui/x-data-grid';
+import { Point } from './interfaces/point';
 
 const theme = createTheme({
   palette: {
@@ -27,7 +27,7 @@ const rows: GridRowsProp = [
    },
    { 
     id: 2, 
-    turnPoint: '5', 
+    turnPoint: '2', 
     latitude: 'S 32 12.92',
     longitude: 'E 016 18.36',
     mv: '22.8W',
@@ -35,7 +35,7 @@ const rows: GridRowsProp = [
    },
   { 
     id: 3, 
-    turnPoint: '2', 
+    turnPoint: '3', 
     type: 'ARIP',
     latitude: 'S 33 25.94',
     longitude: 'E 018 12.00',
@@ -44,7 +44,7 @@ const rows: GridRowsProp = [
    },
   { 
     id: 4, 
-    turnPoint: '3', 
+    turnPoint: '4', 
     type: 'ARCP',
     latitude: 'S 32 48.21',
     longitude: 'E 017 40.62',
@@ -53,7 +53,7 @@ const rows: GridRowsProp = [
    },
   { 
     id: 5, 
-    turnPoint: '4', 
+    turnPoint: '5', 
     type: 'AREX',
     latitude: 'S 32 04.00',
     longitude: 'E 017 07.10',
@@ -128,12 +128,28 @@ const legColumnVisibilityModel: GridColumnVisibilityModel = {
 }
 
 const columns: GridColDef[] = [
-  { field: 'turnPoint', headerName: 'Turn Pt', width: 75 },
-  { field: 'fix', headerName: 'Fix/Pt', width: 100 },
-  { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'description', headerName: 'Desc', width: 100 },
-  { field: 'latitude', headerName: 'Lat', width: 100 },
-  { field: 'longitude', headerName: 'Long', width: 100 },
+  { 
+    field: 'turnPoint', 
+    width: 75,
+    sortable: false,
+    disableColumnMenu: true,
+    renderHeader: (_params: GridColumnHeaderParams) => stackedGridCell('Turn Pt', 'Type'), 
+    renderCell: (params: GridRenderCellParams<Point>) => stackedGridCell(params.row.turnPoint, params.row.type)
+  },
+  { 
+    field: 'fix', 
+    width: 150,
+    sortable: false,
+    renderHeader: (_params: GridColumnHeaderParams) => stackedGridCell('Fix/Pt', 'Desc'), 
+    renderCell: (params: GridRenderCellParams<Point>) => stackedGridCell(params.row.fix, params.row.description)
+   },
+  { 
+    field: 'latitude', 
+    width: 100,
+    sortable: false,
+    renderHeader: (_params: GridColumnHeaderParams) => stackedGridCell('Latitude', 'Longitude'),
+    renderCell: (params: GridRenderCellParams<Point>) => stackedGridCell(params.row.latitude, params.row.longitude),
+  },
   { field: 'elevation', headerName: 'Elev(ft)', width: 100 },
   { field: 'mv', headerName: 'MV', width: 100 },
   { field: 'altitude', headerName: 'Alt(ft)', width: 100 },
@@ -150,10 +166,49 @@ const columns: GridColDef[] = [
   { field: 'lowLevel', headerName: 'Low Level', width: 100 },
   { field: 'formation', headerName: 'Formation', width: 100 },
   { field: 'cat1', headerName: 'CAT 1', width: 100 },
-  { field: 'iaf', headerName: 'IAF', width: 100 },
-  { field: 'tech', headerName: 'TECH', width: 100 },
+  { 
+    field: 'iaf', 
+    headerName: 'IAF', 
+    width: 75,
+    type: 'boolean',
+    editable: true,
+    renderCell: (params: GridRenderEditCellParams<Point>) => customBooleanGridCell(params.row.iaf)
+  },
+  { 
+    field: 'tech', 
+    headerName: 'TECH', 
+    width: 75, 
+    type: 'boolean',
+    editable: true,    
+    renderCell: (params: GridRenderEditCellParams<Point>) => customBooleanGridCell(params.row.tech)
+   },
   { field: 'warnings', headerName: 'Warnings', width: 100 },
 ];
+
+  function stackedGridCell(top: string, bottom: string): JSX.Element {
+    return (
+      <Grid
+        container
+        display="flex"
+        direction="column"
+        justifyContent="space-around"
+        sx={{
+          width: '100%',
+          height: '100%',
+          paddingX: '5',
+        }}
+      >
+        <Typography>{top}</Typography>
+        <Typography>{bottom}</Typography>
+      </Grid>
+    );
+  }
+
+  function customBooleanGridCell(value: boolean): JSX.Element {
+    return (
+      value ? <GridCheckIcon></GridCheckIcon> : <></>
+    );
+  }
 
 function App() {  
   const [gridDisplayMode, setGridDisplayMode] = React.useState('details');
